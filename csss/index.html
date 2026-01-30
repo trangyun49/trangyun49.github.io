@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Music Player</title>
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=0.5, minimum-scale=0.5, width=device-width" />
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/all.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+
+<!-- Nguồn website được stolen bởi HoangNguyen, sử dụng với mục đích cá nhân -->
+<!-- Tất cả các bài hát được sử dụng trên web được tổng hợp từ nhiều nguồn như NCT, Zingmp3, Youtube -->
+<!-- con vịt kêu Meo ở bên dưới được lấy từ Amazon :v -->
+    <!--       _
+       .__(.)< (MEOW)
+        \___)
+ ~~~~~~~~~~~~~~~~~~-->
+ <audio src="hellrisinghopper.mp3" autoplay></audio>
+    <h1 id="message">Music player</h1>
+
+	<div id="app-cover">
+        <div id="bg-artwork"></div>
+        <div id="bg-layer"></div>
+        <div id="player">
+            <div id="player-track">
+                <div id="album-name"></div>
+                <div id="track-name"></div>
+                <div id="track-time">
+                    <div id="current-time"></div>
+                    <div id="track-length"></div>
+                </div>
+                <div id="s-area">
+                    <div id="ins-time"></div>
+                    <div id="s-hover"></div>
+                    <div id="seek-bar"></div>
+                </div>
+            </div>
+            <div id="player-content">
+                <div id="album-art">
+                    <img src="https://raw.githubusercontent.com/himalayasingh/music-player-1/master/img/_1.jpg" class="active" id="_1">
+                    <div id="buffer-box">Đang tải...</div>
+                </div>
+                <div id="player-controls">
+                    <div class="control">
+                        <div class="button" id="play-previous">
+                            <i class="fas fa-backward"></i>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <div class="button" id="play-pause-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <div class="button" id="play-next">
+                            <i class="fas fa-forward"></i>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <div class="button" id="play-repeat">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <div class="button" id="play-menu">
+                            <i class="fas fa-bars"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="list-song" style="display: none;">
+        </div>
+    </div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script><script  src="./script.js"></script>
+ <div id="message1">
+Bị lỗi load nhạc lâu thì chọn lại bài trong list nhạc nhé <a href="https://drive.google.com/folderview?id=1-CYE_2aVbn0Q7rR4gzz1TJ3Xd9RXivgt">😗.</a>
+	</div>
+
+</body>
+
+</html>

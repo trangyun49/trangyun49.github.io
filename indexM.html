@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Music Player – Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{--pink:#ff2d7a;--pink2:#ff6aa8;--bg:#fff;--muted:#666;--text:#222}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:var(--bg);font-family:Roboto,system-ui;color:var(--text);display:flex;align-items:center;justify-content:center}
+    .phone{width:420px;max-width:100vw;height:100dvh;background:rgba(255,192,203,0.25);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(255,105,180,0.2)}
+    .top{padding:16px 18px;background:linear-gradient(135deg,var(--pink),var(--pink2));text-align:center;font-weight:700;color:#fff;letter-spacing:.5px}
+    .screen{flex:1;overflow:hidden;padding:16px}
+    .card{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:16px}
+    .cover-wrap{position:relative;width:220px;height:220px;margin:6px auto 12px}
+    .ring{--deg:0deg;position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--pink) var(--deg),rgba(255,255,255,.16) 0 360deg)}
+    .ring::after{content:"";position:absolute;inset:8px;border-radius:50%;background:linear-gradient(180deg,#fff,#fbeaf1);box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+    .cover{position:absolute;inset:16px;border-radius:50%;overflow:hidden}
+    .cover img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .sp{position:absolute;inset:0;margin:auto;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+    .rotate{animation:spin 9s linear infinite}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .title{text-align:center;font-weight:800;margin:4px 0;color:#222}
+    .artist{text-align:center;color:var(--muted);font-size:12px}
+    .ctrl{display:flex;justify-content:center;gap:16px;margin:10px 0}
+    .btn{width:48px;height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.7);display:grid;place-items:center;color:var(--pink)}
+    .play{width:68px;height:68px;border-radius:22px;background:linear-gradient(135deg,var(--pink),var(--pink2));border:0;box-shadow:0 10px 30px rgba(255,45,122,.35);color:#fff}
+    .timeline{margin:6px 8px 0}
+    input[type=range]{width:100%;appearance:none;background:transparent}
+    input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:6px;background:linear-gradient(90deg,var(--pink),var(--pink2))}
+    input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;margin-top:-6px}
+    .time{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:4px}
+    .list-title{margin:14px 4px 8px;font-weight:700;color:#111;display:flex;align-items:center;gap:6px}
+    .list-title input{flex:1;border:none;border-radius:20px;padding:6px 10px;background:rgba(255,255,255,0.8);font-size:14px}
+    .playlist{height:36vh;overflow:auto;display:flex;flex-direction:column;gap:10px}
+    .song{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(0,0,0,.05);border-radius:14px;padding:8px 10px;position:relative}
+    .song.active::after{content:"";position:absolute;inset:0;border-radius:14px;padding:2px;background:linear-gradient(135deg,var(--pink),var(--pink2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+    .song.hide{display:none!important}
+    .thumb{width:56px;height:56px;border-radius:12px;background-size:cover;background-position:center}
+    .meta{flex:1;overflow:hidden}
+    .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#111}
+    .singer{font-size:12px;color:var(--muted)}
+    footer{text-align:right;font-size:13px;margin:8px 12px;color:#e14ba3}
+    footer a{color:#e14ba3;text-decoration:none;font-weight:700}
+    @media (orientation: landscape){.phone{width:100vw;height:100dvh;border-radius:0}.cover-wrap{width:180px;height:180px}.playlist{height:44svh}}
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top">Music Player</div>
+    <div class="screen">
+      <div class="card">
+        <div class="cover-wrap">
+          <div class="ring" id="ring"></div>
+          <div class="cover"><img id="cover" src="" alt=""></div>
+          <div class="sp"></div>
+        </div>
+        <div class="title" id="title">—</div>
+        <div class="artist" id="artist">—</div>
+        <div class="ctrl">
+          <button class="btn" id="prev"><i class="fa-solid fa-backward-step"></i></button>
+          <button class="btn play" id="play"><i id="ico" class="fa-solid fa-play"></i></button>
+          <button class="btn" id="next"><i class="fa-solid fa-forward-step"></i></button>
+        </div>
+        <div class="timeline">
+          <input id="seek" type="range" min="0" max="100" value="0" step="0.1">
+          <div class="time"><span id="cur">0:00</span><span id="dur">0:00</span></div>
+        </div>
+      </div>
+      <div class="list-title">
+        <span>Playlist</span>
+        <input type="search" id="search" placeholder="Tìm bài hát..." autocomplete="off" inputmode="search" enterkeyhint="search">
+      </div>
+      <div class="playlist" id="list"></div>
+    </div>
+    <footer><a href="https://fb.com/HoangXinhVaiLon">HoangNguyen ♥</a><br>Version 1.0(test)</footer>
+    <audio id="audio" preload="metadata"></audio>
+  </div>
+
+  <script src="./songs.js"></script>
+  <script>
+    const audioEl=document.getElementById('audio'),
+          titleEl=document.getElementById('title'),
+          artistEl=document.getElementById('artist'),
+          coverImg=document.getElementById('cover'),
+          ringEl=document.getElementById('ring'),
+          listEl=document.getElementById('list'),
+          playBtn=document.getElementById('play'),
+          ico=document.getElementById('ico'),
+          prevBtn=document.getElementById('prev'),
+          nextBtn=document.getElementById('next'),
+          seek=document.getElementById('seek'),
+          curEl=document.getElementById('cur'),
+          durEl=document.getElementById('dur'),
+          searchInput=document.getElementById('search');
+
+    const SONGS=(window.SONGS_ALL&&Array.isArray(window.SONGS_ALL))?window.SONGS_ALL:(window.SONGS||[]);
+    let index=0, raf;
+
+    function fmt(s){if(!isFinite(s))return'0:00';const m=Math.floor(s/60),n=Math.floor(s%60);return m+':'+String(n).padStart(2,'0');}
+
+    function renderBase(){
+      listEl.innerHTML = SONGS.map((v,k)=>`
+        <div class="song ${k===index?'active':''}" data-i="${k}">
+          <div class="thumb" style="background-image:url('${v.image||''}')"></div>
+          <div class="meta"><div class="name">${v.name||''}</div><div class="singer">${v.author||''}</div></div>
+        </div>
+      `).join('');
+    }
+
+    function applySong(v){
+      titleEl.textContent = v.name || '';
+      artistEl.textContent = v.author || '';
+      coverImg.src = v.image || '';
+      audioEl.src = v.path || '';
+    }
+
+    function load(n,{autoplay=false}={}){
+      index = (n + SONGS.length) % SONGS.length;
+      const v = SONGS[index] || {};
+      document.querySelectorAll('.song').forEach((e,k)=>e.classList.toggle('active',k===index));
+      applySong(v);
+      autoplay ? play() : pause();
+    }
+
+    function loop(){
+      const x=audioEl.currentTime, y=audioEl.duration;
+      if (seek) seek.value = y ? (x/y)*100 : 0;
+      if (curEl) curEl.textContent = fmt(x);
+      if (durEl) durEl.textContent = fmt(y);
+      if (ringEl) ringEl.style.setProperty('--deg',(y?(x/y)*360:0)+'deg');
+      raf = requestAnimationFrame(loop);
+    }
+
+    function play(){
+      audioEl.play().then(()=>{
+        ico.className='fa-solid fa-pause';
+        coverImg.classList.add('rotate');
+        cancelAnimationFrame(raf); loop();
+      }).catch(()=>{});
+    }
+
+    function pause(){
+      audioEl.pause();
+      ico.className='fa-solid fa-play';
+      coverImg.classList.remove('rotate');
+      cancelAnimationFrame(raf);
+    }
+
+    function filter(){
+      const kw=(searchInput?.value||'').trim().toLowerCase();
+      document.querySelectorAll('.song').forEach(el=>{
+        if(!kw){el.classList.remove('hide');return;}
+        const n=el.querySelector('.name')?.textContent.toLowerCase()||'';
+        const s=el.querySelector('.singer')?.textContent.toLowerCase()||'';
+        (n.includes(kw)||s.includes(kw))?el.classList.remove('hide'):el.classList.add('hide');
+      });
+    }
+
+    listEl.addEventListener('click', e=>{
+      const it=e.target.closest('.song');
+      if(!it) return;
+      load(Number(it.dataset.i), {autoplay:true});
+    });
+
+    prevBtn.onclick = ()=> load(index-1, {autoplay:true});
+    nextBtn.onclick = ()=> load(index+1, {autoplay:true});
+    playBtn.onclick = ()=> audioEl.paused ? play() : pause();
+
+    if (seek){
+      seek.oninput = e=>{
+        if(audioEl.duration) audioEl.currentTime = (e.target.value/100)*audioEl.duration;
+      };
+    }
+    if (searchInput){
+      let t; searchInput.addEventListener('input', e=>{ clearTimeout(t); t=setTimeout(filter,80); });
+    }
+
+    audioEl.onended = ()=> load(index+1, {autoplay:true});
+    audioEl.onloadedmetadata = ()=> { if(durEl) durEl.textContent = fmt(audioEl.duration); };
+
+    renderBase();
+    filter();
+    load(0,{autoplay:false});
+  </script>
+</body>
+</html>

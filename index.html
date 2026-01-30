@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel=" icon" href="./assets/img/favicon.ico" type="image/x-icon">
+    <title>Music Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./styles.css">
+    <script>
+  if (/Android|iPhone|iPad|iPod|Windows Phone|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent)) {
+    window.location.href = "indexM.html";
+  }
+</script>
+
+</head>
+<body>
+<!-- Popup -->
+<div class="popup-blur" id="landingModal">
+  <div class="popup-card">
+ <img src="./Popup.png" alt="">
+    <div class="popup-text">
+      <h2>自分月じの⾳楽を聴う</h2>
+      <p>Listen to your own music</p>
+      <button class="popup-explore" id="btnExplore">EXPLORE NOW</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* --- Popup --- */
+.popup-blur {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 9999;
+}
+.popup-blur[open] { display: grid; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+.popup-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  width: min(900px, 90vw);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+.popup-card img {
+  background-color: transparent;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.popup-text {
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+.popup-explore {
+margin-top: 10px;
+padding: 10px 20px;
+border-radius: 999px;
+border: 2px solid #e14ba3;
+background: rgba(255,182,210,0.25);
+color: #e14ba3;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+.popup-explore:hover {
+background: rgba(255,182,210,0.45);
+transform: translateY(-1px);
+}
+.popup-explore:active {
+transform: translateY(0);
+background: rgba(255,182,210,0.6);
+}
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.8);
+  font-size: 18px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+const modal = document.getElementById('landingModal');
+const btnExplore = document.getElementById('btnExplore');
+
+function openModal() { modal.setAttribute('open',''); }
+function closeModal() { modal.removeAttribute('open'); }
+
+window.addEventListener('load', openModal);
+btnExplore.addEventListener('click', closeModal);
+</script>
+
+    <div class="container">
+        
+        <div class="volume-feature">
+            <div class="volume-bar">
+                <input type="range" class="process-volume" name="volume" id="" value=0  min="0" max="100">
+            </div>
+            <div class="ico">
+                <i class="fa-solid fa-volume-high"></i>
+            </div>
+        </div>
+        <div class="main">
+            <div class="store app">
+                <div class="store__header">
+                    <span>お気に入リスト</span>
+                    <h2 class="header__name">音楽ストア</h2>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" spellcheck=false placeholder="検索。。。">
+                    <button class="search-button">
+                      <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="stock-music">
+    
+                </div>
+            </div>
+            <div class="music--app app">
+                <div class="header">
+                    <span>再生中</span>
+                    <h2 class="header__name">Jane Doe</h2>
+                </div>
+                <div class="cd">
+                    <div class="cd--thumb">
+                        
+                    </div>
+                </div>
+                <div class="controls">
+                    <div class="control return">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                    </div>
+                    <div class="control prev">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </div>
+                    <div class="control play--ui">
+                        <i class="play--ico fa-solid fa-play"></i>
+                        <i class="play--ico fa-solid fa-pause"></i>
+                    </div>
+                    <div class="control next">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </div>
+                    <div class="control random">
+                        <i class="fa-solid fa-shuffle"></i>
+                    </div>
+                </div>
+                <audio id="audio" src=""></audio>
+                <div class="process--bar">
+                    <input type="range" name="ProcessMusic" id="process" class="process" value=0  min="0" max="100" >
+                </div>
+                <div class="playlist">
+                </div>
+            </div>
+            
+        </div>
+      
+    </div>
+    <div class="cre"><a href="https://FB.com/HoangXinhVaiLon">
+        <font color="#ffffff">TrangTrang ♥ </font></a><br>
+        Version 1.0(beta)
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js" integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./script.js"></script>
+    <script src="./anim.js"></script>
+      
+</body>
+</html>
